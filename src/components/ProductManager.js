@@ -13,9 +13,9 @@ const ProductManager = () => {
     color: '',
     brand: '',
   });
-  const [editProduct, setEditProduct] = useState(null); // State to manage editing
-  const [showForm, setShowForm] = useState(false); // State to manage form visibility
-  const [showEditForm, setShowEditForm] = useState(false); // State to manage edit form visibility
+  const [editProduct, setEditProduct] = useState(null);
+  const [showForm, setShowForm] = useState(false);
+  const [showEditForm, setShowEditForm] = useState(false);
 
   useEffect(() => {
     fetchProducts();
@@ -42,8 +42,8 @@ const ProductManager = () => {
         storage: '',
         color: '',
         brand: '',
-      }); // Reset form after adding product
-      setShowForm(false); // Hide the form after adding the product
+      });
+      setShowForm(false);
     } catch (error) {
       console.error('Error adding product:', error);
     }
@@ -64,9 +64,10 @@ const ProductManager = () => {
   };
 
   const handleEditProductChange = (e) => {
+    const { name, value } = e.target;
     setEditProduct({
       ...editProduct,
-      [e.target.name]: e.target.value,
+      [name]: name === 'price' ? parseFloat(value) || '' : value, // Ensure price is a number
     });
   };
 
@@ -84,9 +85,10 @@ const ProductManager = () => {
   };
 
   const handleChange = (e) => {
+    const { name, value } = e.target;
     setNewProduct({
       ...newProduct,
-      [e.target.name]: e.target.value,
+      [name]: name === 'price' ? parseFloat(value) || '' : value, // Ensure price is a number
     });
   };
 
@@ -101,12 +103,10 @@ const ProductManager = () => {
     <div className="product-manager">
       <h2>Product Manager</h2>
 
-      {/* Button to Show Add Product Form */}
       <button onClick={() => setShowForm(!showForm)}>
         {showForm ? 'Hide Add Product Form' : 'Show Add Product Form'}
       </button>
 
-      {/* Conditional Rendering of Add Product Form */}
       {showForm && (
         <div className="add-product-form">
           <input
@@ -165,7 +165,6 @@ const ProductManager = () => {
         </div>
       )}
 
-      {/* Conditional Rendering of Edit Product Form */}
       {showEditForm && editProduct && (
         <div className="edit-product-form">
           <input
@@ -225,7 +224,6 @@ const ProductManager = () => {
         </div>
       )}
 
-      {/* Product List */}
       <ul className="product-list">
         {products.map(product => (
           <li key={product.id}>
