@@ -1,0 +1,46 @@
+.user-manager {
+  padding: 20px;
+}
+
+.user-manager h1 {
+  margin-bottom: 20px;
+}
+
+.user-manager table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.user-manager th, .user-manager td {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+.user-manager th {
+  background-color: #f2f2f2;
+}
+
+.user-manager .error-message {
+  color: red;
+  margin-bottom: 10px;
+}
+
+.user-manager select {
+  padding: 5px;
+  margin-right: 10px;
+}
+
+.user-manager button {
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+.user-manager .delete-button {
+  background-color: red;
+  color: white;
+  border: none;
+}
+
+.user-manager .delete-button:hover {
+  background-color: darkred;
+}

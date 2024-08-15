@@ -1,0 +1,67 @@
+.header {
+  background-color: #f8f8f8;
+  padding: 20px 30px; /* Increase padding to make the header larger */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  justify-content: space-between;
+}
+
+.logo-container {
+  display: flex;
+  align-items: center;
+}
+
+.logo {
+  height: 60px; /* Increase the logo height */
+  margin-right: 15px;
+}
+
+.site-name {
+  font-size: 28px; /* Increase the font size for the site name */
+  font-weight: bold;
+  color: #333;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+}
+
+.nav-links a {
+  margin: 0 15px; /* Increase spacing between nav links */
+  text-decoration: none;
+  font-size: 18px; /* Increase font size of nav links */
+  color: #333;
+  transition: color 0.3s;
+}
+
+.nav-links a:hover {
+  color: #007bff;
+}
+
+.nav-links button {
+  margin-left: 15px; /* Increase spacing between buttons and nav links */
+  padding: 8px 15px; /* Increase padding of the button */
+  border: none;
+  background-color: #007bff;
+  font-size: 16px; /* Increase font size of the button */
+  color: white;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: background-color 0.3s;
+}
+
+.nav-links button:hover {
+  background-color: #0056b3;
+}
+.username{
+  color: black;
+}

@@ -1,0 +1,65 @@
+.admin-header {
+    background-color: #f8f8f8;
+    padding: 20px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .nav {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    justify-content: space-between;
+  }
+  
+  .logo-container {
+    display: flex;
+    align-items: center;
+  }
+  
+  .logo {
+    height: 60px; /* Adjust the logo size */
+    margin-right: 15px;
+  }
+  
+  .site-name {
+    font-size: 28px; /* Increase the font size for the site name */
+    font-weight: bold;
+    color: #333;
+  }
+  
+  .nav-links {
+    display: flex;
+    align-items: center;
+  }
+  
+  .nav-links a {
+    margin: 0 15px; /* Increase spacing between nav links */
+    text-decoration: none;
+    font-size: 18px; /* Adjust the font size */
+    color: #333;
+    transition: color 0.3s;
+  }
+  
+  .nav-links a:hover {
+    color: #007bff;
+  }
+  
+  .nav-links a:last-child {
+    margin-right: 0; /* Remove margin for the last link */
+  }
+  
+  .nav-links a:active {
+    color: #0056b3; /* Active state color */
+  }
+  
+  .logout-link {
+    color: #ff4d4d; /* Red color for the logout link */
+  }
+  
+  .logout-link:hover {
+    color: #ff0000; /* Darker red on hover */
+  }
+  

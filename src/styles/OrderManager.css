@@ -1,0 +1,45 @@
+.order-manager {
+    padding: 20px;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.order-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.order-table th, .order-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+.order-table th {
+    background-color: #f4f4f4;
+}
+
+.order-table tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.order-table tr:hover {
+    background-color: #f1f1f1;
+}
+
+.order-table select {
+    padding: 5px;
+}
+
+.order-table button {
+    background-color: #ff4d4d;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 3px;
+}
+
+.order-table button:hover {
+    background-color: #e60000;
+}

@@ -1,0 +1,121 @@
+/* ProductManager.css */
+
+.product-manager {
+  width: 90%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+h2 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+button {
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  border: none;
+  border-radius: 4px;
+  background-color: #007bff;
+  color: white;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+.add-product-form, .edit-product-form {
+  border: 1px solid #ddd;
+  padding: 20px;
+  margin: 20px 0;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+}
+
+.add-product-form input,
+.edit-product-form input,
+.add-product-form select,
+.edit-product-form select {
+  display: block;
+  width: calc(100% - 22px);
+  margin-bottom: 10px;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.add-product-form input[type="number"],
+.edit-product-form input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+.add-product-form input[type="number"]::-webkit-outer-spin-button,
+.add-product-form input[type="number"]::-webkit-inner-spin-button,
+.edit-product-form input[type="number"]::-webkit-outer-spin-button,
+.edit-product-form input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.product-list {
+  list-style: none;
+  padding: 0;
+}
+
+.product-list li {
+  display: flex;
+  align-items: center;
+  border: 1px solid #ddd;
+  margin-bottom: 10px;
+  padding: 10px;
+  border-radius: 8px;
+  background-color: #fff;
+}
+
+.product-image {
+  width: 120px;
+  height: 120px;
+  object-fit: cover; /* Ensures the image covers the container without distortion */
+  border-radius: 4px;
+  overflow: hidden; /* Ensures no overflow of image */
+  margin-right: 20px;
+}
+
+.product-details {
+  flex: 1;
+}
+
+.product-details h3 {
+  margin: 0 0 10px 0;
+  font-size: 18px;
+}
+
+.product-details p {
+  margin: 0 0 10px 0;
+  font-size: 16px;
+  color: #333;
+}
+
+.product-details button {
+  margin-right: 10px;
+  background-color: #dc3545;
+}
+
+.product-details button:hover {
+  background-color: #c82333;
+}
+
+.edit-product-form button,
+.add-product-form button {
+  margin-right: 10px;
+  background-color: #28a745;
+}
+
+.edit-product-form button:hover,
+.add-product-form button:hover {
+  background-color: #218838;
+}
