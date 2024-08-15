@@ -68,14 +68,7 @@ const Home = () => {
 
   return (
     <div className="home">
-      <div className="search-bar">
-        <input
-          type="text"
-          placeholder="Search for products..."
-          value={searchQuery}
-          onChange={handleSearchChange} // Handle input changes
-        />
-      </div>
+      
       
       <div className="latest-offers">
         <button className="prev" onClick={prevSlide}>❮</button>

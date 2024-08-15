@@ -20,6 +20,7 @@ const AdminHeader = () => {
           <Link to="/admin-dashboard/product-manager">Product Manager</Link>
           <Link to="/admin-dashboard/user-manager">User Manager</Link>
           <Link to="/admin-dashboard/order-manager">Order Manager</Link>
+          {/*<Link to="/admin-dashboard/Admin-Profile">Admin Profile</Link>*/}
           <Link to="/" onClick={logout}>Logout</Link>
         </div>
       </nav>

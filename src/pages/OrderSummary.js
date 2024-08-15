@@ -72,7 +72,7 @@ const OrderSummary = () => {
                                         <div>
                                             <p>{product.name}</p>
                                             <p>Price: ₹ {product.price.toFixed(2)}</p>
-                                            <p>Quantity: {product.quantity}</p> {/* Displaying quantity */}
+                                           
                                         </div>
                                     </div>
                                 ))
