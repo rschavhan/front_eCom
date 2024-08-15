@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import api from '../services/api';
 import { useNavigate } from 'react-router-dom';
 import '../styles/Register.css'
-
+//Regpage
 const Register = () => {
     const [formData, setFormData] = useState({
         username: '',
