@@ -2,10 +2,9 @@ import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { AppContext } from '../context/AppContext';
 import '../styles/Header.css'; // Import the CSS file for styling
-//import { AppProvider, AppContext } from './context/AppContext';
 
 const Header = () => {
-  const { userName,userId, logout, cart } = useContext(AppContext);
+  const { userName, userId, logout, cart } = useContext(AppContext);
 
   return (
     <header className="header">
@@ -21,14 +20,17 @@ const Header = () => {
           <Link to="/products">Products</Link>
           {userId ? (
             <>
-            <Link to="/cart">Cart ({cart.length})</Link>
-            <Link to="/order-summary">My Orders</Link>
-            <Link to="/profile">Profile</Link>
-              <span className='username' style={{ color: 'red' ,opacity:'50%'}}>Welcome,<br /> {userName}</span>
+              <Link to="/cart">Cart ({cart.length})</Link>
+              <Link to="/order-summary">My Orders</Link>
+              <Link to="/profile">Profile</Link>
+              <span className='username' style={{ color: 'red', opacity: '50%' }}>
+                Welcome,<br /> {userName}
+              </span>
               <button onClick={logout}>Logout</button>
             </>
           ) : (
             <>
+              <span className='guest-mode'>Guest mode</span>
               <Link to="/login">Login</Link>
               <Link to="/register">Register</Link>
             </>

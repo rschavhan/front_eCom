@@ -65,3 +65,12 @@
 .username{
   color: black;
 }
+.guest-mode {
+  position: absolute;
+  left: 500px;
+  /*margin-left: auto;*/
+  /*margin-right: auto;*/
+  font-weight: bold;
+  text-align: center;
+  color: black;
+}

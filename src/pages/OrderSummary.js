@@ -1,13 +1,11 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { useLocation } from 'react-router-dom';
 import api from '../services/api';
 import { toast } from 'react-toastify';
-import { AppContext } from '../context/AppContext'; // Import AppContext
+import { AppContext } from '../context/AppContext'; 
 import '../styles/OrderSummary.css';
 
 const OrderSummary = () => {
-    const location = useLocation();
-    const { userId } = useContext(AppContext); // Get userId from context
+    const { userId } = useContext(AppContext);
     const [orders, setOrders] = useState([]);
     const [loading, setLoading] = useState(true);
 
@@ -20,9 +18,7 @@ const OrderSummary = () => {
 
             try {
                 const response = await api.get(`/orders/user/${userId}/details`);
-                console.log("Orders fetched:", response.data);
                 if (Array.isArray(response.data) && response.data.length > 0) {
-                    // Sort orders by date descending
                     const sortedOrders = response.data.sort((a, b) => new Date(b.orderDate) - new Date(a.orderDate));
                     setOrders(sortedOrders);
                 } else {
@@ -39,6 +35,21 @@ const OrderSummary = () => {
         fetchOrders();
     }, [userId]);
 
+    const handleCancelOrder = async (orderId) => {
+        try {
+            const response = await api.put(`/orders/${orderId}/status`, null, {
+                params: { status: "Cancelled" }
+            });
+            setOrders(orders.map(order => 
+                order.id === orderId ? { ...order, status: "Cancelled" } : order
+            ));
+            toast.success('Order cancelled successfully.');
+        } catch (error) {
+            console.error('Error cancelling order:', error);
+            toast.error('Failed to cancel the order.');
+        }
+    };
+
     if (loading) return <div>Loading...</div>;
 
     return (
@@ -50,8 +61,7 @@ const OrderSummary = () => {
                 orders.map((order, index) => (
                     <div key={order.id} className="order-details">
                         <div className="order-header">
-                            {/* Removed Order ID display */}
-                            <h2>Order Number: {index + 1}</h2> {/* Displaying order number as a normal integer */}
+                            <h2>Order Number: {index + 1}</h2> 
                             <p><strong>Total Amount:</strong> ₹ {order.totalAmount !== null ? order.totalAmount.toFixed(2) : 'N/A'}</p>
                             <p><strong>Order Date:</strong> {new Date(order.orderDate).toLocaleDateString()}</p>
                             <p className="status"><strong>Status:</strong> {order.status}</p>
@@ -72,7 +82,6 @@ const OrderSummary = () => {
                                         <div>
                                             <p>{product.name}</p>
                                             <p>Price: ₹ {product.price.toFixed(2)}</p>
-                                           
                                         </div>
                                     </div>
                                 ))
@@ -80,6 +89,14 @@ const OrderSummary = () => {
                                 <p>No products available for this order.</p>
                             )}
                         </div>
+                        {order.status !== "Cancelled" && order.status !== "Delivered" && (
+                            <button 
+                                className="cancel-order-button" 
+                                onClick={() => handleCancelOrder(order.id)}
+                            >
+                                Cancel Order
+                            </button>
+                        )}
                     </div>
                 ))
             )}

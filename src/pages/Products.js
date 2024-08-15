@@ -12,6 +12,13 @@ const Products = () => {
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [selectedProduct, setSelectedProduct] = useState(null);
 
+  const [categories, setCategories] = useState({
+    all: true,
+    phone: false,
+    footwear: false,
+    clothes: false,
+  });
+
   // Fetch products from API when component mounts
   useEffect(() => {
     axios.get('http://localhost:8080/api/products')
@@ -24,15 +31,48 @@ const Products = () => {
       });
   }, []);
 
-  // Filter products based on searchQuery
+  // Filter products based on searchQuery and selected categories
   useEffect(() => {
     const query = searchQuery.toLowerCase();
-    setFilteredProducts(
-      products.filter(product =>
-        product.name.toLowerCase().includes(query)
-      )
+    let filtered = products.filter(product =>
+      product.name.toLowerCase().includes(query)
     );
-  }, [searchQuery, products]);
+
+    if (!categories.all) {
+      filtered = filtered.filter(product => {
+        if (categories.phone && product.category.toLowerCase() === 'phone') return true;
+        if (categories.footwear && product.category.toLowerCase() === 'footwear') return true;
+        if (categories.clothes && product.category.toLowerCase() === 'clothes') return true;
+        return false;
+      });
+    }
+
+    setFilteredProducts(filtered);
+  }, [searchQuery, categories, products]);
+
+  const handleCategoryChange = (e) => {
+    const { name, checked } = e.target;
+    setCategories(prevState => {
+      if (name === 'all') {
+        return {
+          all: checked,
+          phone: false,
+          footwear: false,
+          clothes: false,
+        };
+      } else {
+        const newState = {
+          ...prevState,
+          [name]: checked,
+          all: false,
+        };
+        if (!newState.phone && !newState.footwear && !newState.clothes) {
+          newState.all = true;
+        }
+        return newState;
+      }
+    });
+  };
 
   const handleProductClick = (product) => {
     setSelectedProduct(product);
@@ -44,6 +84,45 @@ const Products = () => {
 
   return (
     <div className="products-container">
+      <div className="category-filter">
+        <label>
+          <input
+            type="checkbox"
+            name="all"
+            checked={categories.all}
+            onChange={handleCategoryChange}
+          />
+          All Products
+        </label>
+        <label>
+          <input
+            type="checkbox"
+            name="phone"
+            checked={categories.phone}
+            onChange={handleCategoryChange}
+          />
+          Phones
+        </label>
+        <label>
+          <input
+            type="checkbox"
+            name="footwear"
+            checked={categories.footwear}
+            onChange={handleCategoryChange}
+          />
+          Footwear
+        </label>
+        <label>
+          <input
+            type="checkbox"
+            name="clothes"
+            checked={categories.clothes}
+            onChange={handleCategoryChange}
+          />
+          Clothes
+        </label>
+      </div>
+
       <div className="products">
         <div className="product-list">
           {filteredProducts.length > 0 ? (
@@ -62,6 +141,7 @@ const Products = () => {
           )}
         </div>
       </div>
+
       {selectedProduct && (
         <ProductCard
           product={selectedProduct}

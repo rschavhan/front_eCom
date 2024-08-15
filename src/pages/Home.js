@@ -6,7 +6,7 @@ import '../styles/Home.css';
 
 const Home = () => {
   const { addToCart } = useContext(AppContext);
-  const { searchQuery, setSearchQuery } = useSearch(); // Get both searchQuery and setSearchQuery
+  const { searchQuery, setSearchQuery } = useSearch();
 
   const [products, setProducts] = useState([]);
   const [displayedProducts, setDisplayedProducts] = useState([]);
@@ -17,16 +17,14 @@ const Home = () => {
     'offer2.png',
     'offer3.png',
     'offer4.png',
-    // Add more offer images as needed
   ];
 
-  // Fetch products on initial load
   useEffect(() => {
     const fetchProducts = async () => {
       try {
         const response = await axios.get('http://localhost:8080/api/products');
         setProducts(response.data);
-        setDisplayedProducts(response.data); // Initially display all products
+        setDisplayedProducts(response.data);
       } catch (error) {
         console.error('Failed to fetch products:', error);
       }
@@ -34,7 +32,6 @@ const Home = () => {
     fetchProducts();
   }, []);
 
-  // Filter products based on search query
   useEffect(() => {
     const query = searchQuery.toLowerCase();
     setDisplayedProducts(
@@ -44,11 +41,10 @@ const Home = () => {
     );
   }, [searchQuery, products]);
 
-  // Slideshow logic
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentIndex((prevIndex) => (prevIndex + 1) % offers.length);
-    }, 3000); // Change slide every 3 seconds
+    }, 3000);
 
     return () => clearInterval(interval);
   }, [offers.length]);
@@ -61,23 +57,24 @@ const Home = () => {
     setCurrentIndex((prevIndex) => (prevIndex - 1 + offers.length) % offers.length);
   };
 
-  // Handle search input change
   const handleSearchChange = (e) => {
-    setSearchQuery(e.target.value); // Update the search query in the context
+    setSearchQuery(e.target.value);
   };
 
   return (
     <div className="home">
-      
-      
-      <div className="latest-offers">
-        <button className="prev" onClick={prevSlide}>❮</button>
-        <img src={offers[currentIndex]} alt={`Offer ${currentIndex + 1}`} />
-        <button className="next" onClick={nextSlide}>❯</button>
+      <div className="search-bar">
+        <input 
+          type="text" 
+          placeholder="Search for products..." 
+          value={searchQuery} 
+          onChange={handleSearchChange} 
+        />
       </div>
       
+
       <div className="best-deals">
-        <h2>Best Deals</h2>
+        <h2>Our Products</h2>
         <div className="product-list">
           {displayedProducts.length > 0 ? (
             displayedProducts.map((product) => (
