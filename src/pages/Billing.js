@@ -8,14 +8,13 @@ import { AppContext } from '../context/AppContext';
 const Billing = () => {
     const location = useLocation();
     const navigate = useNavigate();
-    const { userId, clearCart } = useContext(AppContext); // Retrieve userId and clearCart from context
+    const { userId, clearCart } = useContext(AppContext);
     const [paymentInfo, setPaymentInfo] = useState({
         cardNumber: '',
         cardExpiry: '',
         cardCvc: '',
     });
 
-    // Retrieve the total amount, selected address, and cart from location state
     const { totalAmount, selectedAddress, cart } = location.state || {};
 
     const handleInputChange = (e) => {
@@ -30,7 +29,7 @@ const Billing = () => {
         e.preventDefault();
         try {
             const orderPayload = {
-                totalAmount, // Use the totalAmount directly
+                totalAmount,
                 orderDate: new Date().toISOString(),
                 status: 'Pending',
                 address: {
@@ -39,21 +38,16 @@ const Billing = () => {
                 products: cart.map(item => ({ id: item.product.id })),
             };
 
-            // POST order to /orders/user/{userId}
             const response = await api.post(`/orders/user/${userId}`, orderPayload, {
                 headers: {
                     'Content-Type': 'application/json',
                 },
             });
 
-            // Clear the cart after a successful payment
             await clearCart();
 
-            // Optionally, update the cart to reflect the changes in the UI
-            //await updateCart(); // You may not need this if clearCart already updates the state
-
             toast.success('Payment successful!');
-            navigate('/order-summary', { state: { order: response.data ,cart} });
+            navigate('/order-summary', { state: { order: response.data, cart } });
         } catch (error) {
             console.error('Payment error:', error);
             toast.error('Error processing payment.');
@@ -70,10 +64,13 @@ const Billing = () => {
         }).format(amount);
     };
 
+    // Get today's date in YYYY-MM-DD format
+    const today = new Date().toISOString().split('T')[0];
+
     return (
         <div className="billing">
             <h1>Billing Information</h1>
-            <h2>Total Amount: {formatAmount(totalAmount)}</h2> {/* Display total amount here */}
+            <h2>Total Amount: {formatAmount(totalAmount)}</h2>
             <form onSubmit={handlePayment}>
                 <label>
                     Card Number:
@@ -88,11 +85,12 @@ const Billing = () => {
                 <label>
                     Expiry Date:
                     <input
-                        type="text"
+                        type="date"
                         name="cardExpiry"
                         value={paymentInfo.cardExpiry}
                         onChange={handleInputChange}
                         required
+                        min={today} // Ensure the expiry date is not before today
                     />
                 </label>
                 <label>
@@ -103,6 +101,8 @@ const Billing = () => {
                         value={paymentInfo.cardCvc}
                         onChange={handleInputChange}
                         required
+                        maxLength="3" // Limit CVV to 3 digits
+                        pattern="\d{3}" // Ensure CVV contains only digits
                     />
                 </label>
                 <button type="submit">Pay Now</button>

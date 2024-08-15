@@ -23,7 +23,8 @@ const Header = () => {
             <>
             <Link to="/cart">Cart ({cart.length})</Link>
             <Link to="/order-summary">My Orders</Link>
-              <span className='username'>Welcome, {userName}</span>
+            <Link to="/profile">Profile</Link>
+              <span className='username' style={{ color: 'red' ,opacity:'50%'}}>Welcome,<br /> {userName}</span>
               <button onClick={logout}>Logout</button>
             </>
           ) : (

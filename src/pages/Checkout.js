@@ -89,7 +89,6 @@ const Checkout = () => {
         }
         navigate('/billing', { state: { totalAmount, selectedAddress, cart } });
     };
-    
 
     return (
         <div className="checkout">
@@ -174,6 +173,7 @@ const Checkout = () => {
                                             id={`address-${address.id}`}
                                             name="selectedAddress"
                                             value={address.id}
+                                            checked={selectedAddress === address.id}
                                             onChange={() => setSelectedAddress(address.id)}
                                         />
                                         <label htmlFor={`address-${address.id}`}>
