@@ -2,18 +2,19 @@ import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import { AppContext } from '../context/AppContext';
 import { useSearch } from '../context/SearchContext';
-import Modal from '../components/Modal'; // Import Modal component
+import Modal from '../components/Modal';
+import { FaHeart, FaRegHeart } from 'react-icons/fa'; // Import icons
 import '../styles/Home.css';
 
 const Home = () => {
-  const { addToCart } = useContext(AppContext);
+  const { addToCart, wishlist, addToWishlist, removeFromWishlist, userId } = useContext(AppContext);
   const { searchQuery, setSearchQuery } = useSearch();
-
+  
   const [products, setProducts] = useState([]);
   const [displayedProducts, setDisplayedProducts] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [selectedProduct, setSelectedProduct] = useState(null); // State for modal
-  const [isModalOpen, setIsModalOpen] = useState(false); // State for modal visibility
+  const [selectedProduct, setSelectedProduct] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const offers = [
     'offer1.png',
@@ -66,11 +67,43 @@ const Home = () => {
 
   const handleProductClick = (product) => {
     setSelectedProduct(product);
-    setIsModalOpen(true); // Open modal
+    setIsModalOpen(true);
   };
 
   const handleCloseModal = () => {
-    setIsModalOpen(false); // Close modal
+    setIsModalOpen(false);
+  };
+
+  const handleWishlistToggle = async (product) => {
+    if (!userId) {
+      console.error('User not logged in.');
+      return;
+    }
+
+    if (wishlist.some(item => item.id === product.id)) {
+      removeFromWishlist(product.id);
+      try {
+        await axios.delete(`http://localhost:8080/api/wishlist/remove`, {
+          params: { userId, productId: product.id }
+        });
+      } catch (error) {
+        console.error('Error removing product from wishlist:', error);
+      }
+    } else {
+      try {
+        await axios.post('http://localhost:8080/api/wishlist/add', {
+          userId,
+          productId: product.id
+        }, {
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        });
+        addToWishlist(product);
+      } catch (error) {
+        console.error('Error adding product to wishlist:', error);
+      }
+    }
   };
 
   return (
@@ -89,13 +122,16 @@ const Home = () => {
         {displayedProducts.length > 0 ? (
           <div className="product-list">
             {displayedProducts.map((product) => (
-              <div key={product.id} className="product" onClick={() => handleProductClick(product)}>
+              <div key={product.id} className="product">
                 <img src={product.imgSrc} alt={product.name} />
                 <h3>{product.name}</h3>
                 <p>₹ {product.price}</p>
                 <div className="product-actions">
                   <button onClick={(e) => { e.stopPropagation(); addToCart(product); }}>Buy Now</button>
                   <button onClick={(e) => { e.stopPropagation(); addToCart(product); }}>Add to Cart</button>
+                  <div className="wishlist-icon" onClick={(e) => { e.stopPropagation(); handleWishlistToggle(product); }}>
+                    {wishlist.some(item => item.id === product.id) ? <FaHeart color="red" /> : <FaRegHeart />}
+                  </div>
                 </div>
               </div>
             ))}
