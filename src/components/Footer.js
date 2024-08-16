@@ -5,7 +5,7 @@ import './Footer.css';
 const Footer = () => {
   return (
     <footer className='footer'>
-      <p>&copy; 2024 Your eCommerce Site</p>
+      <p>&copy; 2024 ShopEzy ExcelR P-12 Group2 eCommerce Site</p>
     </footer>
   );
 };

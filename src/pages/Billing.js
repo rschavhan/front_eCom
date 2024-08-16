@@ -15,7 +15,7 @@ const Billing = () => {
         cardCvc: '',
     });
 
-    const { totalAmount, selectedAddress, cart = [], directCart = [] } = location.state || {};
+    const { totalAmount, selectedAddress, cart , directCart  } = location.state || {};
     const products = cart.length > 0 ? cart : directCart;
 
     useEffect(() => {
