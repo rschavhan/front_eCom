@@ -48,23 +48,34 @@ const Cart = () => {
         }, 0);
         setTotalAmount(total);
     };
-
     const handleQuantityChange = async (cartId, quantity) => {
         try {
+            console.log(`Attempting to update quantity for cart item with ID ${cartId} to ${quantity}`);
             if (quantity < 1) {
                 setFeedbackMessage('Quantity must be at least 1.');
+                console.log('Quantity must be at least 1.');
                 return;
             }
-
+    
             await api.put(`/cart/${cartId}?quantity=${quantity}`, {}, { withCredentials: true });
-
+    
+            console.log('Quantity updated on server successfully');
+    
             const updatedCart = localCart.map(item =>
                 item.id === cartId ? { ...item, quantity } : item
             );
+            console.log('Updated local cart:', updatedCart);
+    
             setLocalCart(updatedCart);
+            console.log('Local cart state updated');
+    
             calculateTotalAmount(updatedCart); // Recalculate total amount
+            console.log('Total amount recalculated');
+    
             // Update global context cart
             addToCart(updatedCart.find(item => item.id === cartId));
+            console.log('Global context cart updated');
+    
             setFeedbackMessage('Quantity updated successfully!');
             toast.success('Quantity updated successfully!');
         } catch (error) {
@@ -73,7 +84,7 @@ const Cart = () => {
             toast.error('Error updating quantity.');
         }
     };
-
+    
     const handleRemoveFromCart = async (cartId) => {
         try {
             await removeFromCart(cartId); // Use context function to remove item

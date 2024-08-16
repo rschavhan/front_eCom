@@ -73,28 +73,30 @@ export const AppProvider = ({ children }) => {
     }
   }, [userId, fetchCart]);
 
-  // Function to add an item to the cart
   const addToCart = async (item) => {
-
-    console.log("item:",item);
+    console.log("Adding item to cart:", item);
     if (!userId) {
         toast.error('Please log in to add items to the cart.');
         return;
     }
-
-
     try {
         // Check if the item already exists in the cart
         const existingItem = cart.find(cartItem => cartItem.product.id === item.id);
 
         if (existingItem) {
-            // If item exists, update the quantity
+            // If item exists, update the quantity by 1
             const newQuantity = existingItem.quantity + 1;
-            await api.post(`/cart/add`, null, {
+            console.log(`Item already in cart. Updating quantity to ${newQuantity}`);
+
+            // Update the quantity on the server
+            const response = await api.post(`/cart/add`, null, {
                 params: { userId, productId: item.id, quantity: newQuantity },
                 withCredentials: true
             });
 
+            console.log('Server response:', response.data);
+
+            // Update local cart state
             setCart(prevCart =>
                 prevCart.map(cartItem =>
                     cartItem.product.id === item.id ? { ...cartItem, quantity: newQuantity } : cartItem
@@ -102,17 +104,41 @@ export const AppProvider = ({ children }) => {
             );
         } else {
             // If item does not exist, add it to the cart
-            await api.post(`/cart/add`, null, {
+            console.log('Item not in cart. Adding item.');
+
+            const response = await api.post(`/cart/add`, null, {
                 params: { userId, productId: item.id, quantity: 1 },
                 withCredentials: true
             });
 
+            console.log('Server response:', response.data);
+
+            // Add new item to local cart state
             setCart(prevCart => [...prevCart, { product: item, quantity: 1 }]);
         }
 
         toast.success('Product added successfully to cart!');
     } catch (error) {
-        
+        console.error('Error adding product to cart:', error);
+        toast.error('Error adding product to cart.');
+    }
+};
+
+
+  // Function to handle quantity change in the cart
+  const handleQuantityChange = async (cartId, quantity) => {
+    try {
+      await api.put(`/cart/${cartId}?quantity=${quantity}`, {}, { withCredentials: true });
+      setCart(prevCart =>
+        prevCart.map(item =>
+          item.id === cartId ? { ...item, quantity } : item
+        )
+      );
+      calculateTotalAmount(); // Recalculate total amount
+      toast.success('Quantity updated successfully!');
+    } catch (error) {
+      console.error('Error updating quantity:', error);
+      toast.error('Error updating quantity.');
     }
   };
 
@@ -280,7 +306,7 @@ const removeFromWishlist = async (productId) => {
 
   return (
     <AppContext.Provider value={{ totalAmount, cart, addToCart, removeFromCart, wishlist,
-      addToWishlist,fetchWishlist,
+      addToWishlist,fetchWishlist,handleQuantityChange,
       removeFromWishlist, userName, userId, userRole, login, isLoggingOut, logout, logoutMessage, searchQuery, updateSearchQuery, fetchCart,clearCart , changeUserRole}}>
       {children}
     </AppContext.Provider>

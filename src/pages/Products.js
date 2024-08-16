@@ -1,13 +1,12 @@
-import React, { useState, useEffect, useContext } from 'react';
-import axios from 'axios'; // Add this line
+// src/components/Products.js
+import React, { useState, useEffect, useContext, useCallback } from 'react';
+import axios from 'axios';
 import { AppContext } from '../context/AppContext';
 import { useSearch } from '../context/SearchContext';
 import { FaHeart, FaRegHeart } from 'react-icons/fa'; // Import icons
 import Modal from '../components/Modal'; // Import Modal
+import _ from 'lodash';
 import '../styles/Products.css';
-
-// ...rest of your component
-
 
 const Products = () => {
   const { addToCart, wishlist, addToWishlist, removeFromWishlist, userId } = useContext(AppContext);
@@ -22,7 +21,27 @@ const Products = () => {
     clothes: false,
   });
 
-  // Fetch products from API when component mounts
+  // Debounced filter function
+  const debouncedFilterProducts = useCallback(
+    _.debounce((query, categories) => {
+      let filtered = products.filter(product =>
+        product.name.toLowerCase().includes(query.toLowerCase())
+      );
+
+      if (!categories.all) {
+        filtered = filtered.filter(product => {
+          if (categories.phone && product.category.toLowerCase() === 'phone') return true;
+          if (categories.footwear && product.category.toLowerCase() === 'footwear') return true;
+          if (categories.clothes && product.category.toLowerCase() === 'clothes') return true;
+          return false;
+        });
+      }
+
+      setFilteredProducts(filtered);
+    }, 300),
+    [products]
+  );
+
   useEffect(() => {
     axios.get('http://localhost:8080/api/products')
       .then(response => {
@@ -34,24 +53,10 @@ const Products = () => {
       });
   }, []);
 
-  // Filter products based on searchQuery and selected categories
+  // Use debounced function for filtering products
   useEffect(() => {
-    const query = searchQuery.toLowerCase();
-    let filtered = products.filter(product =>
-      product.name.toLowerCase().includes(query)
-    );
-
-    if (!categories.all) {
-      filtered = filtered.filter(product => {
-        if (categories.phone && product.category.toLowerCase() === 'phone') return true;
-        if (categories.footwear && product.category.toLowerCase() === 'footwear') return true;
-        if (categories.clothes && product.category.toLowerCase() === 'clothes') return true;
-        return false;
-      });
-    }
-
-    setFilteredProducts(filtered);
-  }, [searchQuery, categories, products]);
+    debouncedFilterProducts(searchQuery, categories);
+  }, [searchQuery, categories, debouncedFilterProducts]);
 
   const handleCategoryChange = (e) => {
     const { name, checked } = e.target;
@@ -85,7 +90,7 @@ const Products = () => {
     setSelectedProduct(null);
   };
 
-  const handleWishlistToggle = (product) => {
+  const handleWishlistToggle = async (product) => {
     if (!userId) {
       console.error('User not logged in.');
       return;
@@ -93,8 +98,27 @@ const Products = () => {
 
     if (wishlist.some(item => item.id === product.id)) {
       removeFromWishlist(product.id);
+      try {
+        await axios.delete(`http://localhost:8080/api/wishlist/remove`, {
+          params: { userId, productId: product.id }
+        });
+      } catch (error) {
+        console.error('Error removing product from wishlist:', error);
+      }
     } else {
-      addToWishlist(product);
+      try {
+        await axios.post('http://localhost:8080/api/wishlist/add', {
+          userId,
+          productId: product.id
+        }, {
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        });
+        addToWishlist(product);
+      } catch (error) {
+        console.error('Error adding product to wishlist:', error);
+      }
     }
   };
 
@@ -165,6 +189,7 @@ const Products = () => {
         isOpen={!!selectedProduct}
         onClose={handleCloseProductCard}
         product={selectedProduct}
+        addToCart={addToCart} // Pass addToCart function here
       />
     </div>
   );

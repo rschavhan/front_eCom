@@ -2,7 +2,7 @@
 import React from 'react';
 import '../styles/Modal.css';
 
-const Modal = ({ isOpen, onClose, product }) => {
+const Modal = ({ isOpen, onClose, product, addToCart }) => {
   if (!isOpen || !product) return null;
 
   // Calculate average rating
@@ -37,6 +37,10 @@ const Modal = ({ isOpen, onClose, product }) => {
             <div className="average-rating">
               <h4>Average Rating: {averageRating.toFixed(1)} / 5</h4>
             </div>
+            {/* Add to Cart Button */}
+            <button onClick={() => addToCart(product)} className="add-to-cart-button">
+              Add to Cart
+            </button>
           </div>
         </div>
       </div>
