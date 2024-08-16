@@ -1,8 +1,8 @@
 // src/components/Modal.js
 import React from 'react';
-import '../styles/ProductCard.css';
+import '../styles/Modal.css';
 
-const ProductCard = ({ isOpen, onClose, product }) => {
+const Modal = ({ isOpen, onClose, product }) => {
   if (!isOpen || !product) return null;
 
   // Calculate average rating
@@ -44,4 +44,4 @@ const ProductCard = ({ isOpen, onClose, product }) => {
   );
 };
 
-export default ProductCard;
+export default Modal;

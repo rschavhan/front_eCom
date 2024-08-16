@@ -51,17 +51,18 @@ const OrderManager = () => {
       <table className="order-table">
         <thead>
           <tr>
-            <th>Order ID</th>
+            <th>Order No</th> {/* Changed header from Order ID to Order No */}
             <th>Total Amount</th>
             <th>Order Date</th>
             <th>Status</th>
+            <th>Address</th> {/* Added Address column */}
             <th>Actions</th>
           </tr>
         </thead>
         <tbody>
-          {orders.map(order => (
+          {orders.map((order, index) => (
             <tr key={order.id}>
-              <td>{order.id}</td>
+              <td>{index + 1}</td> {/* Display continuous integer starting from 1 */}
               <td>₹ {order.totalAmount ? order.totalAmount.toFixed(2) : 'N/A'}</td>
               <td>{new Date(order.orderDate).toLocaleDateString()}</td>
               <td>
@@ -75,6 +76,15 @@ const OrderManager = () => {
                   <option value="Delivered">Delivered</option>
                   <option value="Cancelled">Cancelled</option>
                 </select>
+              </td>
+              <td>
+                {order.addressDTO ? (
+                  <div>
+                    <p>{order.addressDTO.addressLine1}</p>
+                    <p>{order.addressDTO.city}, {order.addressDTO.state}, {order.addressDTO.postalCode}</p>
+                    <p>{order.addressDTO.country}</p>
+                  </div>
+                ) : 'N/A'}
               </td>
               <td>
                 <button onClick={() => handleCancelOrder(order.id)}>Cancel</button>

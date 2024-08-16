@@ -19,6 +19,7 @@ import UserProfile from './pages/UserProfile';
 import './App.css';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import WishlistPage from './pages/WishlistPage';
 
 const AppContent = () => {
   const { userRole } = useContext(AppContext);
@@ -32,6 +33,7 @@ const AppContent = () => {
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
           <Route path="/products" element={<Products />} />
+          <Route path="/wishlist" element={<WishlistPage />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/admin-dashboard/*" element={<AdminDashboard />} />
           <Route path="/checkout" element={<Checkout />} /> 

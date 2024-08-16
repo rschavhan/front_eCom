@@ -1,17 +1,20 @@
 import React, { useState, useEffect, useContext } from 'react';
-import axios from 'axios';
+import axios from 'axios'; // Add this line
 import { AppContext } from '../context/AppContext';
-import { useSearch } from '../context/SearchContext'; 
-import ProductCard from '../components/ProductCard'; 
+import { useSearch } from '../context/SearchContext';
+import { FaHeart, FaRegHeart } from 'react-icons/fa'; // Import icons
+import Modal from '../components/Modal'; // Import Modal
 import '../styles/Products.css';
 
+// ...rest of your component
+
+
 const Products = () => {
-  const { addToCart } = useContext(AppContext);
+  const { addToCart, wishlist, addToWishlist, removeFromWishlist, userId } = useContext(AppContext);
   const { searchQuery } = useSearch();
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [selectedProduct, setSelectedProduct] = useState(null);
-
   const [categories, setCategories] = useState({
     all: true,
     phone: false,
@@ -82,6 +85,19 @@ const Products = () => {
     setSelectedProduct(null);
   };
 
+  const handleWishlistToggle = (product) => {
+    if (!userId) {
+      console.error('User not logged in.');
+      return;
+    }
+
+    if (wishlist.some(item => item.id === product.id)) {
+      removeFromWishlist(product.id);
+    } else {
+      addToWishlist(product);
+    }
+  };
+
   return (
     <div className="products-container">
       <div className="category-filter">
@@ -133,6 +149,9 @@ const Products = () => {
                 <p>₹ {product.price}</p>
                 <div className="product-actions">
                   <button onClick={(e) => { e.stopPropagation(); addToCart(product); }}>Add to Cart</button>
+                  <div className="wishlist-icon" onClick={(e) => { e.stopPropagation(); handleWishlistToggle(product); }}>
+                    {wishlist.some(item => item.id === product.id) ? <FaHeart color="red" /> : <FaRegHeart />}
+                  </div>
                 </div>
               </div>
             ))
@@ -142,12 +161,11 @@ const Products = () => {
         </div>
       </div>
 
-      {selectedProduct && (
-        <ProductCard
-          product={selectedProduct}
-          onClose={handleCloseProductCard}
-        />
-      )}
+      <Modal
+        isOpen={!!selectedProduct}
+        onClose={handleCloseProductCard}
+        product={selectedProduct}
+      />
     </div>
   );
 };

@@ -7,6 +7,7 @@ export const AppContext = createContext();
 
 export const AppProvider = ({ children }) => {
   const [cart, setCart] = useState([]);
+  const [wishlist, setWishlist] = useState([]); 
   const [userName, setUserName] = useState(null);
   const [userId, setUserId] = useState(null);
   const [userRole, setUserRole] = useState([]);
@@ -146,6 +147,78 @@ const removeFromCart = async (id) => {
     toast.success('Login successful!');
   };
 
+  const fetchWishlist = useCallback(async () => {
+    if (!userId) return;
+  
+    try {
+      const response = await api.get(`/wishlist/${userId}`, { withCredentials: true });
+      setWishlist(response.data);
+    } catch (error) {
+      console.error('Error fetching wishlist:', error);
+      toast.error('Error fetching wishlist');
+    }
+  }, [userId]);
+  
+  // The rest of the AppContext code remains unchanged...
+  
+
+
+
+// Function to add an item to the wishlist
+const addToWishlist = async (item) => {
+  if (!userId) {
+    toast.error('Please log in to add items to the wishlist.');
+    return;
+  }
+
+  try {
+    await api.post('/wishlist/add', {
+      userId,
+      productId: item.id
+    }, {
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      withCredentials: true
+    });
+
+    setWishlist(prevWishlist => [...prevWishlist, item]);
+    toast.success('Product added to wishlist!');
+  } catch (error) {
+    toast.error('Error adding product to wishlist');
+    console.error('Error:', error);
+  }
+};
+
+// Function to remove an item from the wishlist
+const removeFromWishlist = async (productId) => {
+  if (!userId) {
+    toast.error('Please log in to remove items from the wishlist.');
+    return;
+  }
+
+
+   // Log the values to the console
+   console.log('Removing item from wishlist:');
+   console.log('Product ID:', productId);
+   console.log('User ID:', userId);
+  try {
+    await api.delete(`/wishlist/${userId}/${productId}`, { withCredentials: true });
+
+    setWishlist(prevWishlist => prevWishlist.filter(item => item.id !== productId));
+    toast.success('Item removed from wishlist!');
+  } catch (error) {
+    
+  }
+};
+
+
+
+
+
+
+
+
   // Function to handle user logout
   const logout = async () => {
     setIsLoggingOut(true);
@@ -206,7 +279,9 @@ const removeFromCart = async (id) => {
     };
 
   return (
-    <AppContext.Provider value={{ totalAmount, cart, addToCart, removeFromCart, userName, userId, userRole, login, isLoggingOut, logout, logoutMessage, searchQuery, updateSearchQuery, fetchCart,clearCart , changeUserRole}}>
+    <AppContext.Provider value={{ totalAmount, cart, addToCart, removeFromCart, wishlist,
+      addToWishlist,fetchWishlist,
+      removeFromWishlist, userName, userId, userRole, login, isLoggingOut, logout, logoutMessage, searchQuery, updateSearchQuery, fetchCart,clearCart , changeUserRole}}>
       {children}
     </AppContext.Provider>
   );

@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import { AppContext } from '../context/AppContext';
 import { useSearch } from '../context/SearchContext';
+import Modal from '../components/Modal'; // Import Modal component
 import '../styles/Home.css';
 
 const Home = () => {
@@ -11,6 +12,8 @@ const Home = () => {
   const [products, setProducts] = useState([]);
   const [displayedProducts, setDisplayedProducts] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [selectedProduct, setSelectedProduct] = useState(null); // State for modal
+  const [isModalOpen, setIsModalOpen] = useState(false); // State for modal visibility
 
   const offers = [
     'offer1.png',
@@ -61,6 +64,15 @@ const Home = () => {
     setSearchQuery(e.target.value);
   };
 
+  const handleProductClick = (product) => {
+    setSelectedProduct(product);
+    setIsModalOpen(true); // Open modal
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false); // Close modal
+  };
+
   return (
     <div className="home">
       <div className="search-bar">
@@ -71,28 +83,35 @@ const Home = () => {
           onChange={handleSearchChange} 
         />
       </div>
-      
 
       <div className="best-deals">
         <h2>Our Products</h2>
-        <div className="product-list">
-          {displayedProducts.length > 0 ? (
-            displayedProducts.map((product) => (
-              <div key={product.id} className="product">
+        {displayedProducts.length > 0 ? (
+          <div className="product-list">
+            {displayedProducts.map((product) => (
+              <div key={product.id} className="product" onClick={() => handleProductClick(product)}>
                 <img src={product.imgSrc} alt={product.name} />
                 <h3>{product.name}</h3>
                 <p>₹ {product.price}</p>
                 <div className="product-actions">
-                  <button onClick={() => addToCart(product)}>Buy Now</button>
-                  <button onClick={() => addToCart(product)}>Add to Cart</button>
+                  <button onClick={(e) => { e.stopPropagation(); addToCart(product); }}>Buy Now</button>
+                  <button onClick={(e) => { e.stopPropagation(); addToCart(product); }}>Add to Cart</button>
                 </div>
               </div>
-            ))
-          ) : (
-            <p>No products found</p>
-          )}
-        </div>
+            ))}
+          </div>
+        ) : (
+          <p>Please add some products from the admin panel.</p>
+        )}
       </div>
+
+      {selectedProduct && (
+        <Modal
+          isOpen={isModalOpen}
+          onClose={handleCloseModal}
+          product={selectedProduct}
+        />
+      )}
     </div>
   );
 };

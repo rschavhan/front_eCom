@@ -4,10 +4,31 @@ import { toast } from 'react-toastify';
 import { AppContext } from '../context/AppContext'; 
 import '../styles/OrderSummary.css';
 
+const StarRating = ({ rating, onChange }) => {
+    const handleClick = (value) => {
+        onChange(value);
+    };
+
+    return (
+        <div className="star-rating">
+            {[1, 2, 3, 4, 5].map(star => (
+                <span
+                    key={star}
+                    className={`star ${star <= rating ? 'filled' : ''}`}
+                    onClick={() => handleClick(star)}
+                >
+                    &#9733;
+                </span>
+            ))}
+        </div>
+    );
+};
+
 const OrderSummary = () => {
-    const { userId } = useContext(AppContext);
+    const { userId, userName } = useContext(AppContext);
     const [orders, setOrders] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [reviewInputs, setReviewInputs] = useState({});
 
     useEffect(() => {
         const fetchOrders = async () => {
@@ -50,6 +71,62 @@ const OrderSummary = () => {
         }
     };
 
+    const handleReviewChange = (e, productId) => {
+        const { name, value } = e.target;
+        setReviewInputs(prevState => ({
+            ...prevState,
+            [productId]: {
+                ...prevState[productId],
+                [name]: value
+            }
+        }));
+    };
+
+    const handleStarRatingChange = (productId, value) => {
+        setReviewInputs(prevState => ({
+            ...prevState,
+            [productId]: {
+                ...prevState[productId],
+                rating: value
+            }
+        }));
+    };
+
+    const handleAddReview = async (productId, orderId) => {
+        const review = reviewInputs[productId];
+        if (!review || !review.comment || !review.rating) {
+            toast.error('Please fill in all fields.');
+            return;
+        }
+    
+        const reviewData = {
+            ...review,
+            reviewerName: userName,
+            userId,
+            rating: parseInt(review.rating, 10) // Ensure the rating is an integer
+        };
+    
+        try {
+            // Send the review data to the backend
+            await api.post(`/products/${productId}/reviews`, reviewData);
+            
+            // Clear the review input for this product
+            setReviewInputs(prevState => ({
+                ...prevState,
+                [productId]: {
+                    comment: '',
+                    rating: 0
+                }
+            }));
+            
+            toast.success('Review added successfully.');
+        } catch (error) {
+            console.error('Error adding review:', error);
+            toast.error('Failed to add the review.');
+        }
+    };
+    
+
     if (loading) return <div>Loading...</div>;
 
     return (
@@ -82,6 +159,21 @@ const OrderSummary = () => {
                                         <div>
                                             <p>{product.name}</p>
                                             <p>Price: ₹ {product.price.toFixed(2)}</p>
+                                            <div className="review-section">
+                                                <textarea 
+                                                    name="comment"
+                                                    placeholder="Write your review..."
+                                                    value={reviewInputs[product.id]?.comment || ''}
+                                                    onChange={(e) => handleReviewChange(e, product.id)}
+                                                />
+                                                <StarRating 
+                                                    rating={reviewInputs[product.id]?.rating || 0}
+                                                    onChange={(value) => handleStarRatingChange(product.id, value)}
+                                                />
+                                                <button onClick={() => handleAddReview(product.id, order.id)}>
+                                                    Submit Review
+                                                </button>
+                                            </div>
                                         </div>
                                     </div>
                                 ))

@@ -74,3 +74,16 @@
   text-align: center;
   color: black;
 }
+/* Header.css */
+
+.nav-links a {
+  text-decoration: none;
+  color: #333; /* Default link color */
+  padding: 10px;
+}
+
+.nav-links .active {
+  font-weight: bold;
+  color: #007bff; /* Highlighted link color */
+  border-bottom: 2px solid #007bff; /* Optional: underline the active link */
+}

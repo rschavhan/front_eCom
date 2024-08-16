@@ -54,7 +54,7 @@ const UserProfile = () => {
 
     return (
         <div className="user-profile-container">
-            <h2>User Profile</h2>
+            <h2>Profile</h2>
             {!isEditing ? (
                 <div className="user-info">
                     <p><strong>Username:</strong> {userData.username}</p>

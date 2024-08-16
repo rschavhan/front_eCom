@@ -12,6 +12,7 @@ const ProductManager = () => {
     storage: '',
     color: '',
     brand: '',
+    size: '', // Added size field for clothes and footwear
   });
   const [editProduct, setEditProduct] = useState(null);
   const [showForm, setShowForm] = useState(false);
@@ -42,6 +43,7 @@ const ProductManager = () => {
         storage: '',
         color: '',
         brand: '',
+        size: '',
       });
       setShowForm(false);
     } catch (error) {
@@ -96,6 +98,9 @@ const ProductManager = () => {
     setNewProduct({
       ...newProduct,
       category: e.target.value,
+      // Reset size and storage based on category change
+      size: e.target.value === 'Phone' ? newProduct.size : '',
+      storage: e.target.value === 'Clothes' || e.target.value === 'Footwear' ? '' : newProduct.storage,
     });
   };
 
@@ -140,13 +145,24 @@ const ProductManager = () => {
             <option value="Footwear">Footwear</option>
             <option value="Clothes">Clothes</option>
           </select>
-          <input
-            type="text"
-            name="storage"
-            placeholder="Storage"
-            value={newProduct.storage}
-            onChange={handleChange}
-          />
+          {newProduct.category === 'Phone' && (
+            <input
+              type="text"
+              name="storage"
+              placeholder="Storage"
+              value={newProduct.storage}
+              onChange={handleChange}
+            />
+          )}
+          {(newProduct.category === 'Clothes' || newProduct.category === 'Footwear') && (
+            <input
+              type="text"
+              name="size"
+              placeholder="Size"
+              value={newProduct.size}
+              onChange={handleChange}
+            />
+          )}
           <input
             type="text"
             name="color"
@@ -198,13 +214,24 @@ const ProductManager = () => {
             <option value="Footwear">Footwear</option>
             <option value="Clothes">Clothes</option>
           </select>
-          <input
-            type="text"
-            name="storage"
-            placeholder="Storage"
-            value={editProduct.storage}
-            onChange={handleEditProductChange}
-          />
+          {editProduct.category === 'Phone' && (
+            <input
+              type="text"
+              name="storage"
+              placeholder="Storage"
+              value={editProduct.storage}
+              onChange={handleEditProductChange}
+            />
+          )}
+          {(editProduct.category === 'Clothes' || editProduct.category === 'Footwear') && (
+            <input
+              type="text"
+              name="size"
+              placeholder="Size"
+              value={editProduct.size}
+              onChange={handleEditProductChange}
+            />
+          )}
           <input
             type="text"
             name="color"

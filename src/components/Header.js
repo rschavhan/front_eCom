@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { Link } from 'react-router-dom';
+import { NavLink } from 'react-router-dom'; // Import NavLink for active link styling
 import { AppContext } from '../context/AppContext';
 import '../styles/Header.css'; // Import the CSS file for styling
 
@@ -10,19 +10,32 @@ const Header = () => {
     <header className="header">
       <nav className="nav">
         <div className="logo-container">
-          <Link to="/">
+          <NavLink to="/" exact>
             <img src="logo.png" alt="Logo" className="logo" />
-          </Link>
+          </NavLink>
           <span className="site-name">ShopEzy</span>
         </div>
         <div className="nav-links">
-          <Link to="/">Home</Link>
-          <Link to="/products">Products</Link>
+          <NavLink to="/" exact activeClassName="active">
+            Home
+          </NavLink>
+          <NavLink to="/products" activeClassName="active">
+            Products
+          </NavLink>
           {userId ? (
             <>
-              <Link to="/cart">Cart ({cart.length})</Link>
-              <Link to="/order-summary">My Orders</Link>
-              <Link to="/profile">Profile</Link>
+              <NavLink to="/wishlist" activeClassName="active">
+                Wishlist
+              </NavLink>
+              <NavLink to="/cart" activeClassName="active">
+                Cart ({cart.length})
+              </NavLink>
+              <NavLink to="/order-summary" activeClassName="active">
+                My Orders
+              </NavLink>
+              <NavLink to="/profile" activeClassName="active">
+                Profile
+              </NavLink>
               <span className='username' style={{ color: 'red', opacity: '50%' }}>
                 Welcome,<br /> {userName}
               </span>
@@ -31,8 +44,12 @@ const Header = () => {
           ) : (
             <>
               <span className='guest-mode'>Guest mode</span>
-              <Link to="/login">Login</Link>
-              <Link to="/register">Register</Link>
+              <NavLink to="/login" activeClassName="active">
+                Login
+              </NavLink>
+              <NavLink to="/register" activeClassName="active">
+                Register
+              </NavLink>
             </>
           )}
         </div>
@@ -41,4 +58,4 @@ const Header = () => {
   );
 };
 
-export default Header; // Ensure default export
+export default Header;
