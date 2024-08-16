@@ -6,12 +6,14 @@ import { useSearch } from '../context/SearchContext';
 import { FaHeart, FaRegHeart } from 'react-icons/fa'; // Import icons
 import Modal from '../components/Modal'; // Import Modal
 import _ from 'lodash';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate
 import '../styles/Products.css';
 
 const Products = () => {
   const { addToCart, wishlist, addToWishlist, removeFromWishlist, userId } = useContext(AppContext);
   const { searchQuery } = useSearch();
   const [products, setProducts] = useState([]);
+  const [localCart, setLocalCart] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [categories, setCategories] = useState({
@@ -20,6 +22,7 @@ const Products = () => {
     footwear: false,
     clothes: false,
   });
+  const navigate = useNavigate(); // Initialize useNavigate
 
   // Debounced filter function
   const debouncedFilterProducts = useCallback(
@@ -45,6 +48,7 @@ const Products = () => {
   useEffect(() => {
     axios.get('http://localhost:8080/api/products')
       .then(response => {
+        setLocalCart(response.data)
         setProducts(response.data);
         setFilteredProducts(response.data); // Set initially filtered products
       })
@@ -122,6 +126,12 @@ const Products = () => {
     }
   };
 
+  const handleBuyNow = (product) => {
+    // Navigate to Billing page with price and other required data
+    navigate('/checkout', { state: { totalAmount: product.price, directCart: [product] } });
+    console.log("mylocacart", [product]);
+  };
+
   return (
     <div className="products-container">
       <div className="category-filter">
@@ -173,6 +183,7 @@ const Products = () => {
                 <p>₹ {product.price}</p>
                 <div className="product-actions">
                   <button onClick={(e) => { e.stopPropagation(); addToCart(product); }}>Add to Cart</button>
+                  <button onClick={(e) => { e.stopPropagation(); handleBuyNow(product); }}>Buy Now</button> {/* Add Buy Now button */}
                   <div className="wishlist-icon" onClick={(e) => { e.stopPropagation(); handleWishlistToggle(product); }}>
                     {wishlist.some(item => item.id === product.id) ? <FaHeart color="red" /> : <FaRegHeart />}
                   </div>

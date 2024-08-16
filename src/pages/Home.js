@@ -5,17 +5,18 @@ import { AppContext } from '../context/AppContext';
 import { useSearch } from '../context/SearchContext';
 import Modal from '../components/Modal';
 import { FaHeart, FaRegHeart } from 'react-icons/fa'; // Import icons
+import { useNavigate } from 'react-router-dom'; // Import useNavigate
 import _ from 'lodash';
 import '../styles/Home.css';
 
 const Home = () => {
   const { addToCart, wishlist, addToWishlist, removeFromWishlist, userId } = useContext(AppContext);
   const { searchQuery, setSearchQuery } = useSearch();
-  
   const [products, setProducts] = useState([]);
   const [displayedProducts, setDisplayedProducts] = useState([]);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const navigate = useNavigate(); // Initialize useNavigate
 
   // Debounced search function
   const debouncedSearch = useCallback(
@@ -91,6 +92,11 @@ const Home = () => {
     }
   };
 
+  const handleBuyNow = (product) => {
+    // Navigate to Billing page with price and other required data
+    navigate('/checkout', { state: { totalAmount: product.price, cart: [product] } });
+  };
+
   return (
     <div className="home">
       <div className="search-bar">
@@ -113,6 +119,7 @@ const Home = () => {
                 <p>₹ {product.price}</p>
                 <div className="product-actions">
                   <button onClick={(e) => { e.stopPropagation(); addToCart(product); }}>Add to Cart</button>
+                  <button onClick={(e) => { e.stopPropagation(); handleBuyNow(product); }}>Buy Now</button> {/* Add Buy Now button */}
                   <div className="wishlist-icon" onClick={(e) => { e.stopPropagation(); handleWishlistToggle(product); }}>
                     {wishlist.some(item => item.id === product.id) ? <FaHeart color="red" /> : <FaRegHeart />}
                   </div>

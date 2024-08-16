@@ -1,14 +1,22 @@
 // src/components/Modal.js
 import React from 'react';
 import '../styles/Modal.css';
+import { useNavigate } from 'react-router-dom';
 
 const Modal = ({ isOpen, onClose, product, addToCart }) => {
+  const navigate = useNavigate();
+
   if (!isOpen || !product) return null;
 
   // Calculate average rating
   const averageRating = product.reviews && product.reviews.length > 0
     ? product.reviews.reduce((acc, review) => acc + review.rating, 0) / product.reviews.length
     : 0;
+
+  const handleBuyNow = () => {
+    // Navigate to Billing page with price and other required data
+    navigate('/checkout', { state: { totalAmount: product.price, cart: [product] } });
+  };
 
   return (
     <div className="modal-overlay">
@@ -37,10 +45,10 @@ const Modal = ({ isOpen, onClose, product, addToCart }) => {
             <div className="average-rating">
               <h4>Average Rating: {averageRating.toFixed(1)} / 5</h4>
             </div>
-            {/* Add to Cart Button */}
-            <button onClick={() => addToCart(product)} className="add-to-cart-button">
-              Add to Cart
-            </button>
+            <div className="modal-buttons">
+              <button onClick={() => { addToCart(product); onClose(); }}>Add to Cart</button>
+              <button onClick={handleBuyNow}>Buy Now</button> {/* Add Buy Now button */}
+            </div>
           </div>
         </div>
       </div>

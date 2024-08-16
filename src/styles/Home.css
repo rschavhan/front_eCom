@@ -1,206 +1,168 @@
+/* src/styles/Home.css */
+
 .home {
+    padding: 20px;
     font-family: Arial, sans-serif;
-    padding: 0 2rem;
-    margin-bottom: 2rem; /* Ensure margin-bottom to avoid footer overlap */
-}
-
-/* Latest Offers */
-.latest-offers {
-    position: relative;
+  }
+  
+  .search-bar {
+    margin-bottom: 20px;
+  }
+  
+  .search-bar input {
     width: 100%;
-    height: 800px;
-    margin-bottom: 2rem;
-    overflow: hidden;
-}
-
-.latest-offers img {
-    width: 100%;
-    height: 450px;
-    object-fit: cover;
-    transition: transform 0.5s ease-in-out;
-}
-
-.latest-offers .prev,
-.latest-offers .next {
-    position: absolute;
-    top: 30%;
-    transform: translateY(-50%);
-    background-color: rgba(0, 0, 0, 0.5);
-    color: white;
-    border: none;
-    padding: 1rem;
-    cursor: pointer;
-    z-index: 1;
-}
-
-.latest-offers .prev {
-    left: 0;
-}
-
-.latest-offers .next {
-    right: 0;
-}
-
-/* Best Deals */
-.best-deals {
-    margin-bottom: 2rem;
-}
-
-.best-deals h2 {
-    margin-bottom: 1rem;
-}
-
-.product-list {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1rem;
-}
-
-.product {
-    width: 200px;
-    text-align: center;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    border-radius: 10px;
-    overflow: hidden;
-}
-
-.product img {
-    width: 100%;
-    height: 200px;
-    object-fit: cover;
-}
-
-.product h3 {
-    margin: 0.5rem 0;
-}
-
-.product p {
-    color: green;
-    font-weight: bold;
-}
-
-/* Featured Brands */
-.featured-brands {
-    margin-bottom: 2rem;
-}
-
-.featured-brands h2 {
-    margin-bottom: 1rem;
-}
-
-.brand-list {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1rem;
-}
-
-.brand {
-    width: 150px;
-    text-align: center;
-}
-
-.brand img {
-    width: 100%;
-    height: 100px;
-    object-fit: cover;
-    border-radius: 50%;
-}
-
-/* Shoes Section */
-.shoes-section {
-    margin-bottom: 2rem;
-}
-
-.shoes-section h2 {
-    margin-bottom: 1rem;
-}
-
-.product-actions {
-    display: flex;
-    justify-content: space-around;
-    margin-top: 1rem;
-}
-
-.product-actions button {
-    padding: 0.5rem 1rem;
-    background-color: #2874f0;
-    color: white;
-    border: none;
+    padding: 10px;
+    border: 1px solid #ddd;
     border-radius: 5px;
-    cursor: pointer;
-}
-
-.product-actions button:hover {
-    background-color: #0056b3;
-}
-.search-bar {
+    font-size: 16px;
+  }
+  
+  .best-deals {
+    margin-top: 20px;
+  }
+  
+  .best-deals h2 {
+    font-size: 24px;
+    margin-bottom: 15px;
+  }
+  
+  .product-list {
     display: flex;
-    justify-content: center;
-    margin: 20px 0;
+    flex-wrap: wrap;
+    gap: 20px;
   }
   
-  .search-bar input[type="text"] {
-    width: 80%;
-    max-width: 500px;
-    padding: 10px 15px;
+  .product {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 15px;
+    text-align: center;
+    width: 200px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    transition: transform 0.2s ease;
+    position: relative;
+  }
+  
+  .product:hover {
+    transform: scale(1.05);
+  }
+  
+  .product img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 5px;
+  }
+  
+  .product h3 {
+    font-size: 18px;
+    margin: 10px 0;
+  }
+  
+  .product p {
     font-size: 16px;
-    border: 1px solid #ccc;
-    border-radius: 25px 0 0 25px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    color: #333;
   }
   
-  .search-bar input[type="text"]:focus {
-    border-color: #007bff;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-    outline: none;
+  .product-actions {
+    margin-top: auto; /* Pushes the actions to the bottom */
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
   }
   
-  .search-bar button {
-    padding: 10px 15px;
-    font-size: 16px;
-    border: 1px solid #007bff;
-    border-left: none;
-    border-radius: 0 25px 25px 0;
+  .product-actions button {
     background-color: #007bff;
     color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
     cursor: pointer;
-    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    font-size: 14px;
+    transition: background-color 0.2s ease;
   }
   
-  .search-bar button:hover {
+  .product-actions button:hover {
     background-color: #0056b3;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
   }
   
-  .search-bar button:focus {
-    outline: none;
+  .wishlist-icon {
+    cursor: pointer;
+    font-size: 20px;
   }
   
-  .logo-container {
+  .wishlist-icon svg {
+    vertical-align: middle;
+  }
+  
+  /* Modal Styles */
+  .modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
     display: flex;
+    justify-content: center;
     align-items: center;
   }
   
-  .site-details {
-    display: flex;
-    flex-direction: column;
-    margin-left: 10px; /* Adjust spacing between the logo and text */
+  .modal-content {
+    background: white;
+    padding: 20px;
+    border-radius: 5px;
+    width: 80%;
+    max-width: 600px;
+    position: relative;
   }
   
-  .site-name {
-    font-size: 24px;
-    font-weight: bold;
+  .modal-content img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 5px;
   }
   
-  .tagline {
+  .modal-content h3 {
+    margin: 15px 0;
+  }
+  
+  .modal-content p {
+    font-size: 16px;
+    color: #333;
+  }
+  
+  .modal-content button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.2s ease;
+  }
+  
+  .modal-content button:hover {
+    background-color: #0056b3;
+  }
+  
+  .modal-close {
     position: absolute;
-    left:140px;
-    top:65px;
-    opacity: 70%;
-    font-weight: bolder;
-  
-    font-size: 18px;
-    color: #252525;
-    margin-top: 4px; /* Adjust spacing between the site name and the tagline */
+    top: 10px;
+    right: 10px;
+    background: #333;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    padding: 5px 10px;
+    cursor: pointer;
+    font-size: 20px;
   }
+  
+  .modal-close:hover {
+    background: #555;
+  }
+  
+  

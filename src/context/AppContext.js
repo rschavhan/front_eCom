@@ -120,7 +120,7 @@ export const AppProvider = ({ children }) => {
         toast.success('Product added successfully to cart!');
     } catch (error) {
         console.error('Error adding product to cart:', error);
-        toast.error('Error adding product to cart.');
+        //toast.error('Error adding product to cart.');
     }
 };
 
@@ -138,7 +138,7 @@ export const AppProvider = ({ children }) => {
       toast.success('Quantity updated successfully!');
     } catch (error) {
       console.error('Error updating quantity:', error);
-      toast.error('Error updating quantity.');
+      //toast.error('Error updating quantity.');
     }
   };
 

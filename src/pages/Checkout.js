@@ -6,6 +6,8 @@ import { toast } from 'react-toastify';
 import '../styles/Checkout.css';
 
 const Checkout = () => {
+    const location = useLocation();
+    const navigate = useNavigate();
     const { userId, cart } = useContext(AppContext);
     const [addresses, setAddresses] = useState([]);
     const [newAddress, setNewAddress] = useState({
@@ -19,15 +21,16 @@ const Checkout = () => {
     const [showAddressForm, setShowAddressForm] = useState(false);
     const [selectedAddress, setSelectedAddress] = useState(null);
     const [totalAmount, setTotalAmount] = useState(0);
-    const navigate = useNavigate();
-    const location = useLocation();
+    const [localCart, setLocalCart] = useState([]);
 
     useEffect(() => {
         fetchAddresses();
-        if (location.state && location.state.totalAmount) {
-            setTotalAmount(location.state.totalAmount);
+        if (location.state) {
+            const { totalAmount, directCart } = location.state;
+            setTotalAmount(totalAmount || 0);
+            setLocalCart(directCart || cart || []);
         }
-    }, [userId, location.state]);
+    }, [location.state, cart]);
 
     const fetchAddresses = async () => {
         try {
@@ -87,7 +90,8 @@ const Checkout = () => {
             toast.error('Please select an address for checkout.');
             return;
         }
-        navigate('/billing', { state: { totalAmount, selectedAddress, cart } });
+        console.log("checkout cart :",cart);
+        navigate('/billing', { state: { totalAmount, selectedAddress, cart: localCart } });
     };
 
     return (

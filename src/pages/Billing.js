@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import api from '../services/api';
@@ -15,7 +15,14 @@ const Billing = () => {
         cardCvc: '',
     });
 
-    const { totalAmount, selectedAddress, cart } = location.state || {};
+    const { totalAmount, selectedAddress, cart = [], directCart = [] } = location.state || {};
+    const products = cart.length > 0 ? cart : directCart;
+
+    useEffect(() => {
+        console.log('Cart:', cart);
+        console.log('DirectCart:', directCart);
+        console.log('Products:', products);
+    }, [cart, directCart, products]);
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -27,6 +34,14 @@ const Billing = () => {
 
     const handlePayment = async (e) => {
         e.preventDefault();
+
+        // Validate that products array is properly structured
+        if (!Array.isArray(products) || products.length === 0 || (!products[0].id && !products[0].product.id)) {
+            toast.error('Invalid cart data.');
+            console.log('Products array is invalid:', products);
+            return;
+        }
+
         try {
             const orderPayload = {
                 totalAmount,
@@ -35,9 +50,10 @@ const Billing = () => {
                 address: {
                     id: selectedAddress,
                 },
-                products: cart.map(item => ({ id: item.product.id })),
+                products: products.map(item => ({ id: item.product ? item.product.id : item.id })),
             };
 
+            console.log('Order Payload:', orderPayload);
             const response = await api.post(`/orders/user/${userId}`, orderPayload, {
                 headers: {
                     'Content-Type': 'application/json',
@@ -47,7 +63,7 @@ const Billing = () => {
             await clearCart();
 
             toast.success('Payment successful!');
-            navigate('/order-summary', { state: { order: response.data, cart } });
+            navigate('/order-summary', { state: { order: response.data, cart: products } });
         } catch (error) {
             console.error('Payment error:', error);
             toast.error('Error processing payment.');
